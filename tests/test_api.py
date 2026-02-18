@@ -125,6 +125,18 @@ def test_delete_tenant_documents():
     data = response.json()
     assert data["status"] == "success"
     assert data["deleted_count"] >= 0  # May be 0 if documents were already deleted in previous runs
+    
+    # Verify documents are no longer accessible through search
+    search_request = {
+        "tenant_id": tenant_id,
+        "query": "Test document",
+        "top_k": 10
+    }
+    search_response = client.post("/search", json=search_request)
+    assert search_response.status_code == 200
+    search_data = search_response.json()
+    # After deletion, search should return no results for this tenant
+    assert len(search_data["results"]) == 0
 
 
 @pytest.mark.asyncio

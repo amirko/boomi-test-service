@@ -1,7 +1,7 @@
 """Hybrid search implementation with parallel execution."""
 import logging
 import asyncio
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import time
 
 from app.services.qdrant_client import get_qdrant_service
@@ -73,7 +73,7 @@ class SearchService:
 
 
 # Global instance
-_search_service: SearchService = None
+_search_service: Optional[SearchService] = None
 
 
 def get_search_service() -> SearchService:

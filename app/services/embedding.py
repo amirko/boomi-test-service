@@ -1,6 +1,6 @@
 """Local embedding service using sentence-transformers."""
 import logging
-from typing import List, Union
+from typing import List, Union, Optional
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -49,7 +49,7 @@ class EmbeddingService:
 
 
 # Global instance
-_embedding_service: EmbeddingService = None
+_embedding_service: Optional[EmbeddingService] = None
 
 
 def get_embedding_service() -> EmbeddingService:

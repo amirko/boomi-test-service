@@ -1,5 +1,6 @@
 """Qdrant vector database client with hybrid search support."""
 import logging
+import hashlib
 from typing import Dict, List, Optional, Any, Tuple
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
@@ -61,12 +62,13 @@ class QdrantService:
         for word in words:
             word_freq[word] = word_freq.get(word, 0) + 1
         
-        # Create sparse vector using hash of words as indices
+        # Create sparse vector using deterministic hash of words as indices
         indices = []
         values = []
         for word, freq in word_freq.items():
-            # Use hash to create consistent indices for words
-            idx = hash(word) % 10000  # Limit index space
+            # Use MD5 hash for deterministic, consistent indices across runs
+            hash_obj = hashlib.md5(word.encode('utf-8'))
+            idx = int(hash_obj.hexdigest()[:8], 16) % 10000  # Limit index space
             indices.append(idx)
             values.append(float(freq))
         
