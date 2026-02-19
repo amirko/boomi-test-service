@@ -6,7 +6,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import (
     VectorParams, Distance, PointStruct, 
     Filter, FieldCondition, MatchValue,
-    SparseVector, SparseVectorParams, SparseIndexParams
+    SparseVector, SparseVectorParams, SparseIndexParams, NamedSparseVector
 )
 import uuid
 
@@ -176,7 +176,10 @@ class QdrantService:
         
         results = self.client.search(
             collection_name=self.collection_name,
-            query_vector=("sparse", sparse_vector),
+            query_vector=NamedSparseVector(
+                name="sparse",
+                vector=sparse_vector
+            ),
             query_filter=Filter(
                 must=[
                     FieldCondition(
